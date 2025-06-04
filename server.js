@@ -14,6 +14,11 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor accesible en red local: http://192.168.2.101:${PORT}`);
 });
 
+/*
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor accesible en red local: http://172.16.111.44:${PORT}`);
+});
+*/
 function generateRoomCode(length = 5) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
