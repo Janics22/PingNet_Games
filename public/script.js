@@ -2,6 +2,7 @@ const socket = io();
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const gameContainer = document.getElementById("gameContainer");
 
 const createRoomBtn = document.getElementById("createRoomBtn");
 const joinRoomBtn = document.getElementById("joinRoomBtn");
@@ -102,6 +103,12 @@ function initGame() {
 
 function drawGame() {
   if (!gameState) return;
+
+  const containerWidth = gameContainer.clientWidth;
+  const scale = Math.min(1, containerWidth / 800);
+  
+  canvas.style.width = `${800 * scale}px`;
+  canvas.style.height = `${400 * scale}px`;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
