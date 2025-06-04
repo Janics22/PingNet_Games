@@ -11,10 +11,22 @@
       text-align: center;
       margin: 20px;
     }
+    #gameContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      width: 100%;
+    }
+
     #gameCanvas {
       border: 2px solid white;
       display: none;
       background: black;
+      /* Mantener relación de aspecto */
+      max-width: 100%; 
+      height: auto;
     }
     #endButton {
       display: none;
@@ -48,10 +60,11 @@
     <button id="normalGameBtn">Partida Normal</button>
     <button id="specialGameBtn">Partida Especial</button>
   </div>
-
-  <canvas id="gameCanvas" width="800" height="400"></canvas>
-  <br />
-  <button id="endButton">Acabar partida</button>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <br />
+    <button id="endButton">Acabar partida</button>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
