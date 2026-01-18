@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto - Ping Pong Digital</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #00d4ff, #ff006e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      color: #00d4ff;
+    }
+
+    p {
+      line-height: 1.8;
+      margin-bottom: 15px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .back-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    }
+
+    .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+    }
+
+    form {
+      margin-top: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #00d4ff;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    button[type="submit"] {
+      background: linear-gradient(135deg, #ff006e, #cc0055);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+      width: 100%;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 0, 110, 0.6);
+      background: linear-gradient(135deg, #ff1a7f, #e60062);
+    }
+
+    .contact-info {
+      background: rgba(0, 212, 255, 0.1);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    .contact-info h3 {
+      color: #00d4ff;
+      margin-bottom: 15px;
+    }
+
+    .contact-info p {
+      margin-bottom: 10px;
+    }
+
+    .success-message {
+      background: rgba(0, 255, 136, 0.2);
+      border: 2px solid #00ff88;
+      color: #00ff88;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-button">⬅️ Volver al Juego</a>
+
+    <h1>📧 Contacto</h1>
+    <p>¿Tienes alguna pregunta, sugerencia o problema? ¡Nos encantaría saber de ti!</p>
+
+    <div id="successMessage" class="success-message">
+      ✅ ¡Mensaje enviado con éxito! Te responderemos pronto.
+    </div>
+
+    <form id="contactForm">
+      <div class="form-group">
+        <label for="name">Nombre *</label>
+        <input type="text" id="name" name="name" required placeholder="Tu nombre completo">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" required placeholder="tu@email.com">
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Asunto *</label>
+        <input type="text" id="subject" name="subject" required placeholder="¿De qué se trata tu mensaje?">
+      </div>
+
+      <div class="form-group">
+        <label for="message">Mensaje *</label>
+        <textarea id="message" name="message" required placeholder="Escribe tu mensaje aquí..."></textarea>
+      </div>
+
+      <button type="submit">📨 Enviar Mensaje</button>
+    </form>
+
+    <div class="contact-info">
+      <h3>Información de Contacto</h3>
+      <p><strong>Email:</strong> contacto@pingpongdigital.com</p>
+      <p><strong>Tiempo de respuesta:</strong> 24-48 horas</p>
+      <p><strong>Horario de atención:</strong> Lunes a Viernes, 9:00 - 18:00 (CET)</p>
+    </div>
+
+    <h2>Preguntas Frecuentes</h2>
+    <p><strong>¿Cómo funciona el multijugador?</strong><br>
+    Un jugador crea una sala y comparte el código con su amigo, quien se une usando ese código.</p>
+
+    <p><strong>¿Puedo jugar sin conexión?</strong><br>
+    Sí, selecciona "Jugar con IA" para una partida local sin necesidad de internet.</p>
+
+    <p><strong>¿Qué navegadores son compatibles?</strong><br>
+    Chrome, Firefox, Safari, Edge y la mayoría de navegadores modernos.</p>
+
+    <footer>
+      <p>© 2026 Ping Pong Digital - Todos los derechos reservados</p>
+      <p>
+        <a href="/privacidad.html" style="color: #00d4ff; text-decoration: none; margin: 0 10px;">Privacidad</a> | 
+        <a href="/cookies.html" style="color: #00d4ff; text-decoration: none; margin: 0 10px;">Cookies</a> | 
+        <a href="/contacto.html" style="color: #00d4ff; text-decoration: none; margin: 0 10px;">Contacto</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Aquí puedes implementar el envío real del formulario
+      // Por ejemplo, usando fetch() a un endpoint de tu servidor
+      
+      // Por ahora, solo mostramos un mensaje de éxito
+      document.getElementById('successMessage').style.display = 'block';
+      this.reset();
+      
+      // Ocultar mensaje después de 5 segundos
+      setTimeout(() => {
+        document.getElementById('successMessage').style.display = 'none';
+      }, 5000);
+    });
+  </script>
+</body>
+</html>
