@@ -1,11 +1,7 @@
-import { io } from "socket.io-client";
-
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
-const BACKEND_URL = "https://pingpong-backend-0po3.onrender.com";
-
 
 const app = express();
 const server = http.createServer(app);
@@ -19,8 +15,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
-
-socket = io(BACKEND_URL);
 
 
 // ============================================
@@ -321,5 +315,6 @@ function resetBall(state, gameType, ball = null) {
     ball.vy = Math.random() * 10 - 5;
   }
 }
+
 
 
