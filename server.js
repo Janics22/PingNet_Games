@@ -20,7 +20,7 @@ const io = new Server(server, {
 // ============================================
 // Servir archivos estáticos (opcional si quieres servir frontend desde backend)
 // ============================================
-// app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 3000;
 
@@ -315,6 +315,7 @@ function resetBall(state, gameType, ball = null) {
     ball.vy = Math.random() * 10 - 5;
   }
 }
+
 
 
 
