@@ -1,4 +1,10 @@
-const socket = io();
+import { io } from "socket.io-client";
+const BACKEND_URL = "https://pingpong-backend-0po3.onrender.com";
+const socket = io(BACKEND_URL);
+
+socket.on("connect", () => {
+  console.log("✅ Conectado al backend con ID:", socket.id);
+});
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -174,3 +180,4 @@ function gameLoop() {
   drawGame();
   requestAnimationFrame(gameLoop);
 }
+
