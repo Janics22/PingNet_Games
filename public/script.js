@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-const BACKEND_URL = "https://pingpong-backend-0po3.onrender.com";
+const BACKEND_URL = "https://www.pingnetgames.com";
 const socket = io(BACKEND_URL);
 
 socket.on("connect", () => {
@@ -180,4 +180,5 @@ function gameLoop() {
   drawGame();
   requestAnimationFrame(gameLoop);
 }
+
 
