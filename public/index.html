@@ -2,15 +2,198 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Ping Pong Multijugador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ping Pong Digital Multijugador</title>
   <style>
-    body {
-      background: #222;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 20px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
+
+    body {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin: 30px 0;
+      text-align: center;
+      background: linear-gradient(90deg, #00d4ff, #ff006e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin: 20px 0;
+      text-align: center;
+      color: #00d4ff;
+    }
+
+    #modeSelection {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      max-width: 500px;
+      width: 100%;
+      margin: 20px auto;
+    }
+
+    #playWithFriendsBtn {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    }
+
+    #playWithFriendsBtn:hover {
+      background: linear-gradient(135deg, #00e5ff, #00b8d4);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+    }
+
+    #playWithAIBtn {
+      background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+      box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+    }
+
+    #playWithAIBtn:hover {
+      background: linear-gradient(135deg, #b565f3, #9747ff);
+      box-shadow: 0 6px 20px rgba(157, 78, 221, 0.6);
+    }
+
+    #menu {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      max-width: 500px;
+      width: 100%;
+      margin: 20px auto;
+    }
+
+    button {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 10px;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+      background: linear-gradient(135deg, #00e5ff, #00b8d4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #createRoomBtn {
+      background: linear-gradient(135deg, #ff006e, #cc0055);
+      box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+    }
+
+    #createRoomBtn:hover {
+      background: linear-gradient(135deg, #ff1a7f, #e60062);
+      box-shadow: 0 6px 20px rgba(255, 0, 110, 0.6);
+    }
+
+    input[type="text"] {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 15px 20px;
+      font-size: 18px;
+      border-radius: 12px;
+      margin: 10px;
+      text-align: center;
+      width: 200px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    input[type="text"]::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    #roomCodeDisplay {
+      background: rgba(0, 212, 255, 0.2);
+      border: 2px solid #00d4ff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      white-space: pre-line;
+      color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    #gameTypeSelection {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      max-width: 500px;
+      width: 100%;
+      margin: 20px auto;
+    }
+
+    #normalGameBtn {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    }
+
+    #normalGameBtn:hover {
+      background: linear-gradient(135deg, #00e5ff, #00b8d4);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+    }
+
+    #specialGameBtn {
+      background: linear-gradient(135deg, #ff006e, #cc0055);
+      box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+    }
+
+    #specialGameBtn:hover {
+      background: linear-gradient(135deg, #ff1a7f, #e60062);
+      box-shadow: 0 6px 20px rgba(255, 0, 110, 0.6);
+    }
+
     #gameContainer {
       display: flex;
       flex-direction: column;
@@ -18,55 +201,669 @@
       justify-content: center;
       margin-top: 20px;
       width: 100%;
+      max-width: 1000px;
     }
 
     #gameCanvas {
-      border: 2px solid white;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
       display: none;
-      background: black;
-      /* Mantener relación de aspecto */
-      max-width: 100%; 
+      background: #0a0e27;
+      max-width: 100%;
       height: auto;
+      box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
     }
+
     #endButton {
       display: none;
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
+      margin-top: 20px;
+      padding: 15px 40px;
+      font-size: 18px;
+      background: linear-gradient(135deg, #ff006e, #cc0055);
+      box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
     }
+
+    #endButton:hover {
+      background: linear-gradient(135deg, #ff1a7f, #e60062);
+      box-shadow: 0 6px 20px rgba(255, 0, 110, 0.6);
+    }
+
     .hidden {
-      display: none;
+      display: none !important;
     }
-    #gameTypeSelection {
-      margin: 20px auto;
-      display: none;
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      #menu, #gameTypeSelection {
+        padding: 30px 20px;
+      }
+
+      button {
+        padding: 12px 30px;
+        font-size: 16px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        max-width: 250px;
+      }
+    }
+
+    .emoji {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <div id="menu">
-    <h1>Ping Pong Multijugador</h1>
+  <h1>🏓 Ping Pong Digital</h1>
 
-    <button id="createRoomBtn">Crear sala</button><br><br>
+  <div id="modeSelection">
+    <div class="emoji">🎮</div>
+    <h2>Selecciona Modo de Juego</h2>
+    <div class="button-group">
+      <button id="playWithFriendsBtn">👥 Jugar con Amigos</button>
+      <button id="playWithAIBtn">🤖 Jugar con IA</button>
+    </div>
+  </div>
 
-    <input type="text" id="roomInput" placeholder="Código sala" maxlength="5" style="text-transform: uppercase" />
-    <button id="joinRoomBtn">Unirse a sala</button><br><br>
+  <div id="menu" class="hidden">
+    <div class="emoji">🎮</div>
+
+    <div class="button-group">
+      <button id="createRoomBtn">🚀 Crear Sala</button>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="roomInput" placeholder="CÓDIGO" maxlength="5" style="text-transform: uppercase" />
+      <button id="joinRoomBtn">🔗 Unirse a Sala</button>
+    </div>
 
     <div id="roomCodeDisplay"></div>
+    
+    <button id="backToModeBtn" style="margin-top: 20px; background: linear-gradient(135deg, #666, #444); box-shadow: 0 4px 15px rgba(100, 100, 100, 0.4);">⬅️ Volver</button>
   </div>
 
   <div id="gameTypeSelection" class="hidden">
-    <h2>Selecciona el tipo de partida</h2>
-    <button id="normalGameBtn">Partida Normal</button>
-    <button id="specialGameBtn">Partida Especial</button>
-  </div>
-  <div id="gameContainer">
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
-    <br />
-    <button id="endButton">Acabar partida</button>
+    <div class="emoji">⚡</div>
+    <h2>Tipo de Partida</h2>
+    <div class="button-group">
+      <button id="normalGameBtn">🎯 Partida Normal</button>
+      <button id="specialGameBtn">✨ Partida Especial</button>
+    </div>
   </div>
 
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <button id="endButton">❌ Terminar Partida</button>
+  </div>
+
+  <footer>
+    © 2026 Ping Pong Digital - Todos los derechos reservados
+    <p style="margin-top: 10px;">
+      <a href="/privacidad.html" style="color: #00d4ff; text-decoration: none; margin: 0 10px;">Privacidad</a> | 
+      <a href="/cookies.html" style="color: #00d4ff; text-decoration: none; margin: 0 10px;">Cookies</a> | 
+      <a href="/contacto.html" style="color: #00d4ff; text-decoration: none; margin: 0 10px;">Contacto</a>
+    </p>
+  </footer>
+
   <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+  <script>
+    const socket = io();
+
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const gameContainer = document.getElementById("gameContainer");
+
+    const modeSelection = document.getElementById("modeSelection");
+    const playWithFriendsBtn = document.getElementById("playWithFriendsBtn");
+    const playWithAIBtn = document.getElementById("playWithAIBtn");
+    const createRoomBtn = document.getElementById("createRoomBtn");
+    const joinRoomBtn = document.getElementById("joinRoomBtn");
+    const roomInput = document.getElementById("roomInput");
+    const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+    const endButton = document.getElementById("endButton");
+    const menuDiv = document.getElementById("menu");
+    const gameTypeSelection = document.getElementById("gameTypeSelection");
+    const normalGameBtn = document.getElementById("normalGameBtn");
+    const specialGameBtn = document.getElementById("specialGameBtn");
+    const backToModeBtn = document.getElementById("backToModeBtn");
+
+    let roomId = null;
+    let role = null;
+    let gameState = null;
+    let gameType = "normal";
+    let isAIMode = false;
+
+    playWithFriendsBtn.onclick = () => {
+      isAIMode = false;
+      modeSelection.style.display = "none";
+      menuDiv.classList.remove("hidden");
+    };
+
+    playWithAIBtn.onclick = () => {
+      isAIMode = true;
+      modeSelection.style.display = "none";
+      gameTypeSelection.classList.remove("hidden");
+    };
+
+    backToModeBtn.onclick = () => {
+      menuDiv.classList.add("hidden");
+      modeSelection.style.display = "block";
+      roomCodeDisplay.textContent = "";
+    };
+
+    createRoomBtn.onclick = () => {
+      menuDiv.style.display = "none";
+      gameTypeSelection.classList.remove("hidden");
+    };
+
+    joinRoomBtn.onclick = () => {
+      const code = roomInput.value.trim().toUpperCase();
+      if (code) {
+        socket.emit("joinRoom", code);
+      }
+    };
+
+    normalGameBtn.onclick = () => {
+      gameType = "normal";
+      if (isAIMode) {
+        startAIGame();
+      } else {
+        socket.emit("createRoom", gameType);
+      }
+    };
+
+    specialGameBtn.onclick = () => {
+      gameType = "special";
+      if (isAIMode) {
+        startAIGame();
+      } else {
+        socket.emit("createRoom", gameType);
+      }
+    };
+
+    function startAIGame() {
+      gameTypeSelection.classList.add("hidden");
+      canvas.style.display = "block";
+      endButton.style.display = "inline-block";
+      
+      // Inicializar juego con IA
+      if (gameType === "normal") {
+        gameState = {
+          playerA: { y: 150 },
+          playerB: { y: 150 },
+          ball: { x: 400, y: 200, vx: 5, vy: 5 },
+          scoreA: 0,
+          scoreB: 0,
+          gameType: "normal"
+        };
+      } else {
+        gameState = {
+          playerA: { y: 150 },
+          playerB: { y: 150 },
+          balls: [{ x: 400, y: 200, vx: 5, vy: 5 }],
+          scoreA: 0,
+          scoreB: 0,
+          gameType: "special",
+          lastEffectTime: Date.now(),
+          activeEffects: []
+        };
+      }
+      
+      role = "playerA";
+      startLocalAIGame();
+    }
+
+    function startLocalAIGame() {
+      const gameInterval = setInterval(() => {
+        if (!gameState) {
+          clearInterval(gameInterval);
+          return;
+        }
+        
+        updateLocalGame();
+        drawGame();
+      }, 1000 / 60);
+      
+      // Guardar referencia para poder detenerlo
+      window.aiGameInterval = gameInterval;
+    }
+
+    function updateLocalGame() {
+      // Aplicar efectos especiales si es partida especial
+      if (gameState.gameType === "special") {
+        applyLocalSpecialEffects();
+      }
+
+      // Actualizar según el tipo de partida
+      if (gameState.gameType === "normal") {
+        updateNormalGame();
+      } else {
+        updateSpecialGame();
+      }
+    }
+
+    function applyLocalSpecialEffects() {
+      const now = Date.now();
+
+      // Cada 10 segundos aplicar un efecto aleatorio
+      if (now - gameState.lastEffectTime > 10000) {
+        gameState.lastEffectTime = now;
+        const effects = ['speedBoost', 'doubleBall', 'directionChange'];
+        const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+        
+        gameState.activeEffects.push({
+          type: randomEffect,
+          endsAt: now + 5000
+        });
+
+        // Aplicar efecto inmediatamente
+        switch (randomEffect) {
+          case 'speedBoost':
+            gameState.balls.forEach(ball => {
+              ball.vx *= 1.5;
+              ball.vy *= 1.5;
+            });
+            break;
+
+          case 'doubleBall':
+            if (gameState.balls.length < 2) {
+              const newBall = {
+                x: 400,
+                y: 200,
+                vx: -gameState.balls[0].vx,
+                vy: gameState.balls[0].vy
+              };
+              gameState.balls.push(newBall);
+            }
+            break;
+
+          case 'directionChange':
+            gameState.balls.forEach(ball => {
+              ball.vx = -ball.vx;
+              ball.vy = Math.random() > 0.5 ? ball.vy : -ball.vy;
+            });
+            break;
+        }
+      }
+
+      // Eliminar efectos expirados
+      gameState.activeEffects = gameState.activeEffects.filter(effect => {
+        if (effect.endsAt < now) {
+          switch (effect.type) {
+            case 'speedBoost':
+              gameState.balls.forEach(ball => {
+                ball.vx /= 1.5;
+                ball.vy /= 1.5;
+              });
+              break;
+
+            case 'doubleBall':
+              if (gameState.balls.length > 1) {
+                gameState.balls = [gameState.balls[0]];
+              }
+              break;
+          }
+          return false;
+        }
+        return true;
+      });
+    }
+
+    function updateNormalGame() {
+      // Actualizar posición de la bola
+      gameState.ball.x += gameState.ball.vx;
+      gameState.ball.y += gameState.ball.vy;
+
+      // Rebotes en paredes superior e inferior
+      if (gameState.ball.y < 10 || gameState.ball.y > 390) {
+        gameState.ball.vy = -gameState.ball.vy;
+      }
+
+      // IA simple para el jugador B
+      const aiCenter = gameState.playerB.y + 50;
+      if (aiCenter < gameState.ball.y - 35) {
+        gameState.playerB.y += 3;
+      } else if (aiCenter > gameState.ball.y + 35) {
+        gameState.playerB.y -= 3;
+      }
+      
+      // Limitar IA
+      gameState.playerB.y = Math.max(0, Math.min(300, gameState.playerB.y));
+
+      const maxSpeed = 15;
+      const speedIncrement = 0.25;
+
+      // Rebote en pala izquierda (jugador)
+      if (
+        gameState.ball.x < 30 &&
+        gameState.ball.y > gameState.playerA.y &&
+        gameState.ball.y < gameState.playerA.y + 100 &&
+        gameState.ball.vx < 0
+      ) {
+        gameState.ball.vx = -gameState.ball.vx;
+        if (Math.abs(gameState.ball.vx) < maxSpeed) {
+          gameState.ball.vx += gameState.ball.vx > 0 ? speedIncrement : -speedIncrement;
+        }
+      }
+
+      // Rebote en pala derecha (IA)
+      if (
+        gameState.ball.x > 770 &&
+        gameState.ball.y > gameState.playerB.y &&
+        gameState.ball.y < gameState.playerB.y + 100 &&
+        gameState.ball.vx > 0
+      ) {
+        gameState.ball.vx = -gameState.ball.vx;
+        if (Math.abs(gameState.ball.vx) < maxSpeed) {
+          gameState.ball.vx += gameState.ball.vx > 0 ? speedIncrement : -speedIncrement;
+        }
+      }
+
+      // Goles
+      if (gameState.ball.x < 0) {
+        gameState.scoreB++;
+        resetLocalBall();
+      } else if (gameState.ball.x > 800) {
+        gameState.scoreA++;
+        resetLocalBall();
+      }
+    }
+
+    function updateSpecialGame() {
+      // IA sigue la primera bola
+      if (gameState.balls.length > 0) {
+        const aiCenter = gameState.playerB.y + 50;
+        const targetBall = gameState.balls[0];
+        
+        if (aiCenter < targetBall.y - 35) {
+          gameState.playerB.y += 3;
+        } else if (aiCenter > targetBall.y + 35) {
+          gameState.playerB.y -= 3;
+        }
+        
+        gameState.playerB.y = Math.max(0, Math.min(300, gameState.playerB.y));
+      }
+
+      // Actualizar todas las bolas
+      gameState.balls.forEach(ball => {
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+
+        // Rebotes en paredes
+        if (ball.y < 10 || ball.y > 390) {
+          ball.vy = -ball.vy;
+        }
+
+        const maxSpeed = 15;
+        const speedIncrement = 0.25;
+
+        // Rebote en pala izquierda
+        if (
+          ball.x < 30 &&
+          ball.y > gameState.playerA.y &&
+          ball.y < gameState.playerA.y + 100 &&
+          ball.vx < 0
+        ) {
+          ball.vx = -ball.vx;
+          if (Math.abs(ball.vx) < maxSpeed) {
+            ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
+          }
+        }
+
+        // Rebote en pala derecha
+        if (
+          ball.x > 770 &&
+          ball.y > gameState.playerB.y &&
+          ball.y < gameState.playerB.y + 100 &&
+          ball.vx > 0
+        ) {
+          ball.vx = -ball.vx;
+          if (Math.abs(ball.vx) < maxSpeed) {
+            ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
+          }
+        }
+
+        // Goles
+        if (ball.x < 0) {
+          gameState.scoreB++;
+          resetSpecialBall(ball);
+        } else if (ball.x > 800) {
+          gameState.scoreA++;
+          resetSpecialBall(ball);
+        }
+      });
+    }
+
+    function resetSpecialBall(ball) {
+      ball.x = 400;
+      ball.y = 200;
+      ball.vx = Math.random() > 0.5 ? 5 : -5;
+      ball.vy = (Math.random() - 0.5) * 6;
+    }
+
+    function resetLocalBall() {
+      gameState.ball.x = 400;
+      gameState.ball.y = 200;
+      gameState.ball.vx = Math.random() > 0.5 ? 5 : -5;
+      gameState.ball.vy = (Math.random() - 0.5) * 6;
+    }
+
+    endButton.onclick = () => {
+      if (isAIMode) {
+        // Terminar juego con IA
+        if (window.aiGameInterval) {
+          clearInterval(window.aiGameInterval);
+        }
+        canvas.style.display = "none";
+        endButton.style.display = "none";
+        modeSelection.style.display = "block";
+        gameState = null;
+        isAIMode = false;
+      } else if (roomId) {
+        socket.emit("endGame", roomId);
+      }
+    };
+
+    socket.on("roomCreated", (code) => {
+      roomId = code;
+      role = "playerA";
+      gameTypeSelection.classList.add("hidden");
+      menuDiv.style.display = "block";
+      roomCodeDisplay.textContent = `🎮 Sala creada: ${code}\n⏳ Esperando jugador...`;
+    });
+
+    socket.on("roomJoined", (code) => {
+      roomId = code;
+      role = "playerB";
+      roomCodeDisplay.textContent = `✅ Unido a la sala: ${code}`;
+      menuDiv.style.display = "block";
+    });
+
+    socket.on("roomFull", () => {
+      alert("❌ La sala está llena o no existe.");
+    });
+
+    socket.on("startGame", (type) => {
+      gameType = type;
+      menuDiv.style.display = "none";
+      canvas.style.display = "block";
+      endButton.style.display = "inline-block";
+
+      requestAnimationFrame(gameLoop);
+    });
+
+    socket.on("gameState", (state) => {
+      gameState = state;
+      drawGame();
+    });
+
+    socket.on("gameEnded", () => {
+      canvas.style.display = "none";
+      endButton.style.display = "none";
+      modeSelection.style.display = "block";
+      gameTypeSelection.classList.add("hidden");
+      menuDiv.classList.add("hidden");
+      
+      roomCodeDisplay.textContent = "";
+      gameState = null;
+      role = null;
+      roomId = null;
+    });
+
+    socket.on("errorMsg", (msg) => {
+      alert("⚠️ " + msg);
+    });
+
+    function drawGame() {
+      if (!gameState) return;
+
+      const containerWidth = gameContainer.clientWidth;
+      const scale = Math.min(1, containerWidth / 800);
+      
+      canvas.style.width = `${800 * scale}px`;
+      canvas.style.height = `${400 * scale}px`;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Línea central con efecto
+      ctx.strokeStyle = "rgba(0, 212, 255, 0.3)";
+      ctx.lineWidth = 4;
+      ctx.setLineDash([15, 15]);
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Paletas con gradiente
+      const gradientA = ctx.createLinearGradient(10, 0, 20, 0);
+      gradientA.addColorStop(0, "#00d4ff");
+      gradientA.addColorStop(1, "#0099cc");
+      ctx.fillStyle = gradientA;
+      ctx.fillRect(10, gameState.playerA.y, 10, 100);
+
+      const gradientB = ctx.createLinearGradient(canvas.width - 20, 0, canvas.width - 10, 0);
+      gradientB.addColorStop(0, "#ff006e");
+      gradientB.addColorStop(1, "#cc0055");
+      ctx.fillStyle = gradientB;
+      ctx.fillRect(canvas.width - 20, gameState.playerB.y, 10, 100);
+
+      // Bola(s) con efecto glow
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = "white";
+      ctx.fillStyle = "white";
+
+      if (gameType === "special" && gameState.balls) {
+        gameState.balls.forEach(ball => {
+          ctx.beginPath();
+          ctx.arc(ball.x, ball.y, 10, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      } else if (gameState.ball) {
+        ctx.beginPath();
+        ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.shadowBlur = 0;
+
+      // Puntuaciones
+      ctx.font = "bold 48px 'Segoe UI'";
+      ctx.fillStyle = "#00d4ff";
+      ctx.fillText(gameState.scoreA, canvas.width / 4 - 20, 60);
+      ctx.fillStyle = "#ff006e";
+      ctx.fillText(gameState.scoreB, (canvas.width * 3) / 4 - 20, 60);
+      
+      // Indicador de partida especial
+      if (gameType === "special") {
+        ctx.font = "bold 24px 'Segoe UI'";
+        ctx.fillStyle = "#ffd700";
+        ctx.textAlign = "center";
+        ctx.fillText("✨ PARTIDA ESPECIAL ✨", canvas.width / 2, 30);
+        
+        if (gameState.activeEffects && gameState.activeEffects.length > 0) {
+          ctx.font = "18px 'Segoe UI'";
+          ctx.textAlign = "left";
+          gameState.activeEffects.forEach((effect, index) => {
+            const effectNames = {
+              speedBoost: "⚡ Velocidad",
+              doubleBall: "⚪⚪ Doble Bola",
+              directionChange: "🔄 Cambio"
+            };
+            ctx.fillStyle = "#00ff88";
+            ctx.fillText(effectNames[effect.type] || effect.type, 20, 100 + index * 25);
+          });
+        }
+        ctx.textAlign = "left";
+      }
+    }
+
+    canvas.addEventListener("mousemove", (e) => {
+      if ((!roomId || !role) && !isAIMode) return;
+
+      const rect = canvas.getBoundingClientRect();
+      let y = e.clientY - rect.top - 50;
+      y = Math.max(0, Math.min(canvas.height - 100, y));
+
+      if (isAIMode) {
+        gameState.playerA.y = y;
+      } else {
+        socket.emit("paddleMove", { roomId, role, y });
+      }
+    });
+
+    function gameLoop() {
+      if (!gameState) {
+        requestAnimationFrame(gameLoop);
+        return;
+      }
+      drawGame();
+      requestAnimationFrame(gameLoop);
+    }
+  </script>
 </body>
 </html>
