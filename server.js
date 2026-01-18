@@ -5,26 +5,28 @@ const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
+
+// ============================================
+// Configuración de Socket.IO
+// ============================================
 const io = new Server(server, {
   cors: {
-    origin: "*", // En producción, cambia esto por tu dominio específico
+    origin: ["https://pingnetgames.com"], // <- dominio de tu frontend en Netlify
     methods: ["GET", "POST"]
   }
 });
 
-// Servir archivos estáticos desde la carpeta public
-app.use(express.static(path.join(__dirname, "public")));
+// ============================================
+// Servir archivos estáticos (opcional si quieres servir frontend desde backend)
+// ============================================
+// app.use(express.static(path.join(__dirname, "public")));
 
-// Configuración del puerto
 const PORT = process.env.PORT || 3000;
 
-// Determinar la URL según el entorno
 const getServerURL = () => {
   if (process.env.DOMAIN) {
-    // Si hay un dominio configurado, usarlo
     return `https://${process.env.DOMAIN}`;
   } else {
-    // Modo desarrollo local
     return `http://localhost:${PORT}`;
   }
 };
@@ -36,22 +38,19 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`Puerto: ${PORT}`);
   console.log(`Local: http://localhost:${PORT}`);
   
-  // Mostrar la IP local si estamos en desarrollo
   if (!process.env.DOMAIN) {
     const os = require('os');
     const networkInterfaces = os.networkInterfaces();
-    
-    Object.keys(networkInterfaces).forEach((interfaceName) => {
-      networkInterfaces[interfaceName].forEach((interface) => {
-        if (interface.family === 'IPv4' && !interface.internal) {
-          console.log(`Red local: http://${interface.address}:${PORT}`);
+    Object.keys(networkInterfaces).forEach((iface) => {
+      networkInterfaces[iface].forEach((i) => {
+        if (i.family === 'IPv4' && !i.internal) {
+          console.log(`Red local: http://${i.address}:${PORT}`);
         }
       });
     });
   } else {
     console.log(`Dominio: ${getServerURL()}`);
   }
-  
   console.log('========================================');
 });
 
@@ -74,9 +73,9 @@ function createInitialGameState(gameType = "normal") {
     playerB: { y: 150 },
     scoreA: 0,
     scoreB: 0,
-    gameType: gameType,
+    gameType,
     lastEffectTime: Date.now(),
-    activeEffects: [],
+    activeEffects: []
   };
 
   if (gameType === "normal") {
@@ -95,7 +94,7 @@ function applySpecialEffects(state) {
     state.lastEffectTime = now;
     const effects = ['speedBoost', 'doubleBall', 'directionChange'];
     const randomEffect = effects[Math.floor(Math.random() * effects.length)];
-    
+
     state.activeEffects.push({
       type: randomEffect,
       endsAt: now + 5000
@@ -108,19 +107,12 @@ function applySpecialEffects(state) {
           ball.vy *= 1.5;
         });
         break;
-
       case 'doubleBall':
         if (state.balls.length < 2) {
-          const newBall = {
-            x: 400,
-            y: 200,
-            vx: -state.balls[0].vx,
-            vy: state.balls[0].vy
-          };
+          const newBall = { x: 400, y: 200, vx: -state.balls[0].vx, vy: state.balls[0].vy };
           state.balls.push(newBall);
         }
         break;
-
       case 'directionChange':
         state.balls.forEach(ball => {
           ball.vx = -ball.vx;
@@ -130,6 +122,7 @@ function applySpecialEffects(state) {
     }
   }
 
+  // Limpiar efectos expirados
   state.activeEffects = state.activeEffects.filter(effect => {
     if (effect.endsAt < now) {
       switch (effect.type) {
@@ -139,11 +132,8 @@ function applySpecialEffects(state) {
             ball.vy /= 1.5;
           });
           break;
-
         case 'doubleBall':
-          if (state.balls.length > 1) {
-            state.balls = [state.balls[0]];
-          }
+          if (state.balls.length > 1) state.balls = [state.balls[0]];
           break;
       }
       return false;
@@ -155,14 +145,12 @@ function applySpecialEffects(state) {
 // ============================================
 // ALMACENAMIENTO DE JUEGOS
 // ============================================
-
 const games = {};
 const intervals = {};
 
 // ============================================
-// SOCKET.IO - GESTIÓN DE CONEXIONES
+// Socket.IO - GESTIÓN DE CONEXIONES
 // ============================================
-
 io.on("connection", (socket) => {
   console.log(`✅ Usuario conectado: ${socket.id}`);
 
@@ -175,7 +163,7 @@ io.on("connection", (socket) => {
     games[roomId] = {
       players: { playerA: socket.id },
       gameState: createInitialGameState(gameType),
-      gameType: gameType
+      gameType
     };
 
     socket.join(roomId);
@@ -184,17 +172,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("joinRoom", (roomId) => {
-    console.log(`🔗 Usuario ${socket.id} intenta unirse a sala ${roomId}`);
     const game = games[roomId];
-    
     if (!game) {
-      console.log(`❌ Sala ${roomId} no existe`);
       socket.emit("errorMsg", "Sala no existe.");
       return;
     }
-    
     if (game.players.playerB) {
-      console.log(`❌ Sala ${roomId} está llena`);
       socket.emit("roomFull");
       return;
     }
@@ -202,14 +185,10 @@ io.on("connection", (socket) => {
     game.players.playerB = socket.id;
     socket.join(roomId);
     socket.emit("roomJoined", roomId);
-    
     io.to(roomId).emit("startGame", game.gameType);
-    console.log(`✅ Usuario ${socket.id} se unió a sala ${roomId}`);
 
     if (!intervals[roomId]) {
-      intervals[roomId] = setInterval(() => {
-        updateGame(roomId);
-      }, 1000 / 60);
+      intervals[roomId] = setInterval(() => updateGame(roomId), 1000/60);
     }
   });
 
@@ -217,12 +196,9 @@ io.on("connection", (socket) => {
     const game = games[roomId];
     if (!game) return;
 
-    if (role === "playerA") {
-      game.gameState.playerA.y = y;
-    } else if (role === "playerB") {
-      game.gameState.playerB.y = y;
-    }
-    
+    if (role === "playerA") game.gameState.playerA.y = y;
+    else if (role === "playerB") game.gameState.playerB.y = y;
+
     io.to(roomId).emit("gameState", game.gameState);
   });
 
@@ -233,28 +209,20 @@ io.on("connection", (socket) => {
       clearInterval(intervals[roomId]);
       delete games[roomId];
       delete intervals[roomId];
-      console.log(`🏁 Partida terminada: ${roomId}`);
     }
   });
 
   socket.on("disconnect", () => {
-    console.log(`❌ Usuario desconectado: ${socket.id}`);
-    
     for (const roomId in games) {
       const game = games[roomId];
 
-      if (game.players.playerA === socket.id) {
-        delete game.players.playerA;
-      }
-      if (game.players.playerB === socket.id) {
-        delete game.players.playerB;
-      }
+      if (game.players.playerA === socket.id) delete game.players.playerA;
+      if (game.players.playerB === socket.id) delete game.players.playerB;
 
       if (!game.players.playerA && !game.players.playerB) {
         clearInterval(intervals[roomId]);
         delete games[roomId];
         delete intervals[roomId];
-        console.log(`🗑️ Sala ${roomId} eliminada (sin jugadores)`);
       }
     }
   });
@@ -271,67 +239,39 @@ function updateGame(roomId) {
   const state = game.gameState;
   const gameType = game.gameType;
 
-  if (gameType === "special") {
-    applySpecialEffects(state);
-  }
+  if (gameType === "special") applySpecialEffects(state);
 
-  if (gameType === "normal") {
-    updateNormalGame(state);
-  } else {
-    updateSpecialGame(state);
-  }
+  if (gameType === "normal") updateNormalGame(state);
+  else updateSpecialGame(state);
 
   io.to(roomId).emit("gameState", state);
 }
 
 function updateNormalGame(state) {
-  state.ball.x += state.ball.vx;
-  state.ball.y += state.ball.vy;
+  const ball = state.ball;
+  ball.x += ball.vx;
+  ball.y += ball.vy;
 
-  if (state.ball.y < 10 || state.ball.y > 390) {
-    state.ball.vy = -state.ball.vy;
-  }
+  if (ball.y < 10 || ball.y > 390) ball.vy = -ball.vy;
 
   const maxSpeed = 15;
   const speedIncrement = 0.25;
 
-  if (
-    state.ball.x < 30 &&
-    state.ball.y > state.playerA.y &&
-    state.ball.y < state.playerA.y + 100 &&
-    state.ball.vx < 0
-  ) {
-    state.ball.vx = -state.ball.vx;
-    if (Math.abs(state.ball.vx) < maxSpeed) {
-      state.ball.vx += state.ball.vx > 0 ? speedIncrement : -speedIncrement;
-    }
-    if (Math.abs(state.ball.vy) < maxSpeed) {
-      state.ball.vy += state.ball.vy > 0 ? speedIncrement / 2 : -speedIncrement / 2;
-    }
+  // Rebote en paletas
+  if (ball.x < 30 && ball.y > state.playerA.y && ball.y < state.playerA.y + 100 && ball.vx < 0) {
+    ball.vx = -ball.vx;
+    if (Math.abs(ball.vx) < maxSpeed) ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
+    if (Math.abs(ball.vy) < maxSpeed) ball.vy += ball.vy > 0 ? speedIncrement/2 : -speedIncrement/2;
   }
 
-  if (
-    state.ball.x > 770 &&
-    state.ball.y > state.playerB.y &&
-    state.ball.y < state.playerB.y + 100 &&
-    state.ball.vx > 0
-  ) {
-    state.ball.vx = -state.ball.vx;
-    if (Math.abs(state.ball.vx) < maxSpeed) {
-      state.ball.vx += state.ball.vx > 0 ? speedIncrement : -speedIncrement;
-    }
-    if (Math.abs(state.ball.vy) < maxSpeed) {
-      state.ball.vy += state.ball.vy > 0 ? speedIncrement / 2 : -speedIncrement / 2;
-    }
+  if (ball.x > 770 && ball.y > state.playerB.y && ball.y < state.playerB.y + 100 && ball.vx > 0) {
+    ball.vx = -ball.vx;
+    if (Math.abs(ball.vx) < maxSpeed) ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
+    if (Math.abs(ball.vy) < maxSpeed) ball.vy += ball.vy > 0 ? speedIncrement/2 : -speedIncrement/2;
   }
 
-  if (state.ball.x < 0) {
-    state.scoreB++;
-    resetBall(state, "normal");
-  } else if (state.ball.x > 800) {
-    state.scoreA++;
-    resetBall(state, "normal");
-  }
+  if (ball.x < 0) { state.scoreB++; resetBall(state, "normal"); }
+  else if (ball.x > 800) { state.scoreA++; resetBall(state, "normal"); }
 }
 
 function updateSpecialGame(state) {
@@ -339,50 +279,26 @@ function updateSpecialGame(state) {
     ball.x += ball.vx;
     ball.y += ball.vy;
 
-    if (ball.y < 10 || ball.y > 390) {
-      ball.vy = -ball.vy;
-    }
+    if (ball.y < 10 || ball.y > 390) ball.vy = -ball.vy;
 
     const maxSpeed = 15;
     const speedIncrement = 0.25;
 
-    if (
-      ball.x < 30 &&
-      ball.y > state.playerA.y &&
-      ball.y < state.playerA.y + 100 &&
-      ball.vx < 0
-    ) {
+    // Rebote en paletas
+    if (ball.x < 30 && ball.y > state.playerA.y && ball.y < state.playerA.y + 100 && ball.vx < 0) {
       ball.vx = -ball.vx;
-      if (Math.abs(ball.vx) < maxSpeed) {
-        ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
-      }
-      if (Math.abs(ball.vy) < maxSpeed) {
-        ball.vy += ball.vy > 0 ? speedIncrement / 2 : -speedIncrement / 2;
-      }
+      if (Math.abs(ball.vx) < maxSpeed) ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
+      if (Math.abs(ball.vy) < maxSpeed) ball.vy += ball.vy > 0 ? speedIncrement/2 : -speedIncrement/2;
     }
 
-    if (
-      ball.x > 770 &&
-      ball.y > state.playerB.y &&
-      ball.y < state.playerB.y + 100 &&
-      ball.vx > 0
-    ) {
+    if (ball.x > 770 && ball.y > state.playerB.y && ball.y < state.playerB.y + 100 && ball.vx > 0) {
       ball.vx = -ball.vx;
-      if (Math.abs(ball.vx) < maxSpeed) {
-        ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
-      }
-      if (Math.abs(ball.vy) < maxSpeed) {
-        ball.vy += ball.vy > 0 ? speedIncrement / 2 : -speedIncrement / 2;
-      }
+      if (Math.abs(ball.vx) < maxSpeed) ball.vx += ball.vx > 0 ? speedIncrement : -speedIncrement;
+      if (Math.abs(ball.vy) < maxSpeed) ball.vy += ball.vy > 0 ? speedIncrement/2 : -speedIncrement/2;
     }
 
-    if (ball.x < 0) {
-      state.scoreB++;
-      resetBall(state, "special", ball);
-    } else if (ball.x > 800) {
-      state.scoreA++;
-      resetBall(state, "special", ball);
-    }
+    if (ball.x < 0) { state.scoreB++; resetBall(state, "special", ball); }
+    else if (ball.x > 800) { state.scoreA++; resetBall(state, "special", ball); }
   });
 }
 
