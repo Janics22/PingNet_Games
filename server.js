@@ -20,7 +20,7 @@ const io = new Server(server, {
   }
 });
 
-const socket = io(BACKEND_URL);
+socket = io(BACKEND_URL);
 
 
 // ============================================
@@ -321,4 +321,5 @@ function resetBall(state, gameType, ball = null) {
     ball.vy = Math.random() * 10 - 5;
   }
 }
+
 
