@@ -1,7 +1,11 @@
+import { io } from "socket.io-client";
+
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
+const BACKEND_URL = "https://pingpong-backend-0po3.onrender.com";
+
 
 const app = express();
 const server = http.createServer(app);
@@ -11,10 +15,13 @@ const server = http.createServer(app);
 // ============================================
 const io = new Server(server, {
   cors: {
-    origin: ["https://pingnetgames.com"], // <- dominio de tu frontend en Netlify
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
+
+const socket = io(BACKEND_URL);
+
 
 // ============================================
 // Servir archivos estáticos (opcional si quieres servir frontend desde backend)
@@ -314,3 +321,4 @@ function resetBall(state, gameType, ball = null) {
     ball.vy = Math.random() * 10 - 5;
   }
 }
+
