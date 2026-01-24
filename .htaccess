@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Forzar HTTPS y WWW
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} !^www\.pingnetgames\.com$ [NC]
+RewriteRule ^(.*)$ https://www.pingnetgames.com/$1 [L,R=301]
